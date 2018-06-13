@@ -1,0 +1,19 @@
+@import '../../../../src/css/functions';
+
+
+video#intro-video {
+	margin: 30px auto;
+	grid-column: 5 / 15;
+
+	width: 100%;
+	max-width: 640px;
+
+	@include respond-to('grid-small') {
+		grid-column: text;
+	}
+}
+
+figure video {
+	width: 100%;
+	display: block;
+}

@@ -1,0 +1,238 @@
+// Styling Cross-Browser Compatible Range Inputs with Sass
+// Github: https://github.com/darlanrod/input-range-sass
+// Author: Darlan Rod https://github.com/darlanrod
+// Version 1.4.1
+// MIT License
+
+@import '../../../../../../src/css/functions';
+
+$track-color: #eee !default;
+$thumb-color: #1F494D !default;
+
+$thumb-radius: 50% !default;
+$thumb-height: 14px !default;
+$thumb-width: 14px !default;
+$thumb-border-width: 2px !default;
+$thumb-border-color: $thumb-color !default;
+
+$track-width: 100% !default;
+$track-height: 8px !default;
+$track-border-width: 2px !default;
+$track-border-color: transparent !default;
+
+$track-radius: 5px !default;
+$contrast: 5% !default;
+
+
+@mixin track {
+  cursor: pointer;
+  height: $track-height;
+  transition: all .2s ease;
+  width: $track-width;
+}
+
+@mixin thumb {
+  background: $thumb-color;
+  border: $thumb-border-width solid $thumb-border-color;
+  border-radius: $thumb-radius;
+  cursor: pointer;
+  height: $thumb-height;
+  width: $thumb-width;
+}
+
+[type='range'] {
+  -webkit-appearance: none;
+  margin: $thumb-height / 2 0;
+  width: $track-width;
+
+  &:focus {
+    outline: 0;
+
+    &::-webkit-slider-runnable-track {
+      background: lighten($track-color, $contrast);
+    }
+
+    &::-ms-fill-lower {
+      background: $track-color;
+    }
+
+    &::-ms-fill-upper {
+      background: lighten($track-color, $contrast);
+    }
+  }
+
+  &::-webkit-slider-runnable-track {
+    @include track;
+    background: $track-color;
+    border: $track-border-width solid $track-border-color;
+    border-radius: $track-radius;
+  }
+
+  &::-webkit-slider-thumb {
+    @include thumb;
+    -webkit-appearance: none;
+    margin-top: ((-$track-border-width * 2 + $track-height) / 2) - ($thumb-height / 2);
+  }
+
+  &::-moz-range-track {
+    @include track;
+    background: $track-color;
+    border: $track-border-width solid $track-border-color;
+    border-radius: $track-radius;
+  }
+
+  &::-moz-range-thumb {
+    @include thumb;
+  }
+
+  &::-ms-track {
+    @include track;
+    background: transparent;
+    border-color: transparent;
+    border-width: ($thumb-height / 2) 0;
+    color: transparent;
+  }
+
+  &::-ms-fill-lower {
+    background: darken($track-color, $contrast);
+    border: $track-border-width solid $track-border-color;
+    border-radius: $track-radius * 2;
+  }
+
+  &::-ms-fill-upper {
+    background: $track-color;
+    border: $track-border-width solid $track-border-color;
+    border-radius: $track-radius * 2;
+  }
+
+  &::-ms-thumb {
+    @include thumb;
+    margin-top: 0;
+  }
+}
+
+.figure1__application {
+  display: flex;
+  flex-direction: row;
+  background-color: #fafafa;
+
+  @include respond-to('mobile') {
+    flex-direction: column;
+  }
+}
+
+.figure1__application canvas {
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+
+}
+
+.figure1__canvas {
+  position: relative;
+  flex: 1;
+
+  @include respond-to('mobile') {
+    width: 100%;
+  }
+
+} 
+
+.figure1__select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+
+.figure1__panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 260px;
+  width: 20%;
+
+  @include respond-to('mobile') {
+    width: 100%;
+  }
+
+  button {
+    padding: 4px 8px;
+    background-color: #ddd;
+    font-weight: bold;
+    border-radius: 2px;
+  }
+}
+
+.figure1__controls {
+  flex: 1 auto;
+  padding: 20px;
+}
+
+.figure1__controls label {
+  font-weight: bold;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.figure1__control {
+  margin-bottom: 12px;
+}
+
+.figure1__checkbox {
+  display: flex;
+  align-items: center;
+  justify-items: center;
+
+  input[type=checkbox] { flex: 0 20px;  }
+  label { flex: 1 }
+
+  @extends .figure1__control;
+}
+
+.figure1__control [type=number], .figure1__control [type=text] {
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+.figure1__control [name=seed], .figure1__control span {
+  font-size: 0.85em;
+}
+
+.figure1__slider {
+  display: flex;
+
+  & span {
+    width: 60px;
+    text-align: right;
+  }
+}
+
+.figure1__info {
+  flex: 0 auto;
+}
+.figure1__device {
+  background: #1F494D;
+  color: #fff;
+}
+.figure1__progress {
+  height: 2px;
+  width: 100%;
+  transform-origin: left center;
+  background-color: #311F4D;
+}
+
+.figure1__info-text a#download {
+  cursor: pointer;
+}
+
+.figure1__info-text, .figure1__device {
+  font-weight: 700;
+  font-size: 12px;
+  font-family: LabGrotesqueMono, monospace;
+  padding: 8px 20px;
+  text-transform: uppercase;
+}

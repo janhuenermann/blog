@@ -1,0 +1,189 @@
+<style src="./intro.scss" lang="scss"></style>
+<video id=intro-video autoplay="autoplay" loop muted playsinline>
+  <source src="<?= $page->file('intro.mp4')->url() ?>" type="video/mp4">
+</video>
+
+<php value="$page->intro()"></php>
+
+<p>Did you know that randomly initialised neural networks actually produce pretty cool pictures? </p>
+
+<p>Well, I didn't, until I recently discovered <i>pattern producing networks</i>. This post will be all about them, and will contribute a pattern generator running in your browser, so you can experience these networks for yourself. But first, let me explain.</p>
+
+<h3>Compositional Pattern Producing Networks</h3>
+<p>A compositional pattern producing network, or CPPN in short, is a network, in this case we will focus mainly on neural nets, that given some parameters produces a visual pattern. The main idea here is to slide the network over all the x-y-coordinates in an image and produce a 3-channel (rgb) color output for each pixel in the output image.  We can look at this network $f$ in the following way: $$ \begin{pmatrix}r\\g\\b\end{pmatrix} = f\begin{pmatrix}x\\y\end{pmatrix} $$ </p>
+
+<p>This network, since it's continuous and differentiable, outputs locally correlated values, meaning, sampling the network on two different very close points will lead to a very similiar output value. This basically results in the property that the image we can generate from it, we could call smooth.</p>
+
+<p>Another cool property this has, is that it has "infinite" resolution, because you can just scale the coordinates the network receives as inputs.</p>
+
+<figure class=collapsed>
+	<img src="img.20180514-152438.var100.seed20017.jpg">
+	<figcaption>One example of a compositional pattern producing network. Using a simple 3-layer network with tanh as the activation function.</figcaption>
+</figure>
+
+<h4>Parameters</h4>
+<p>Now we could simply run the network as it is. And this in fact works. But we take this a little step further by adding certain other inputs to the network with the aim of having the network generate more complex images. </p>
+
+<p>For example we can add the radius $r$ and an adjustable parameter $\alpha$. With these modification our network $f$ looks like this $$ \begin{pmatrix}r\\g\\b\end{pmatrix} = f\begin{pmatrix}x\\y\\r\\\alpha\end{pmatrix} $$ with $ r = \sqrt{x^2 + y^2} $. The radius not only provides a nice non-linearity but it also enables the network to correlate the output color to the distance to the origin, because points on the same circumference receive the same values for $r$. </p>
+
+<p>While the radius $r$ changes with $x$ and $y$, the $\alpha$ parameter is static over the course of the image. In essence, you can think of this parameter as the z-parameter. When sampling from the 3-dimensional (x y z) cube we look at the slice at position $ z = \alpha $. </p>
+
+<p>You can get very creative with these parameters and we'll explore more exotic configurations later on.</p>
+
+<figure class=collapsed>
+	<img src="img.20180514-154652.var200.seed2345725.jpg">
+	<figcaption>What about a 9-layer DenseNet? well see for yourself.</figcaption>
+</figure>
+
+<figure class=collapsed>
+	<video autoplay="autoplay" loop muted playsinline>
+	  <source src="<?= $page->file('animation1.mp4')->url() ?>" type="video/mp4">
+	</video>
+	<figcaption><p>Animating along $\alpha$</p></figcaption>
+</figure>
+
+<h3>Initialisation</h3>
+
+<p>The output of a neural network is defined a) by its inputs which we talked about in the last section  and b) by its weights. The weights therefore play a crucial role in how the network behaves and thus what the output image will look like. </p>
+
+<p>In the example images throughout this post, I mainly sampled the weights $W$ from a Gaussian distribution ($\mathcal{N}$), with a mean of zero and with a variance depended on the number of input neurons and a parameter $\beta$ which I could adjust to my taste. $$ W(N_{in}, \beta) = \mathcal{N}(\mu = 0, \sigma = \beta \frac{1}{N_{in}}) $$
+</p>
+
+<figure class=collapsed>
+	<img src="img.20180514-155415.var40000.seed67453949.jpg">
+	<figcaption>We can also ask the network to just spit a single value out, and interpret that as a black and white image.</figcaption>
+</figure>
+
+
+<p>Now to the fun part. Here is a progressive image generator based on the principle of CPPNs. You can adjust the Z-value, the variance (which equals $\beta$ in the above description), choose if you want a black and white image (B/W) and explore the seed space. Note, that the random number generator used for the Gaussian distribution will always produce the same values for the same seed, which is cool, because you can share the seed and retrieve the same result. </p>
+
+<figure id=figure1></figure>
+
+<p>I compiled a list of example seeds that I found quite compelling while I played with the tool. Try these seeds for the start and then explore the space yourself! :)</p>
+
+<style src="./figure2.scss" lang="scss"></style>
+<figure id=figure2 class="seed-figure">
+	<div class="images seed-figure-grid">
+		<div class=image data-config='{ "seed": 6130076054, "time": -0.2, "variance": 588.1 }'>
+			<img w=256 src="seeds1.jpg">
+			<span class="image-text">"Complexity"</span>
+			<span class="image-text seed">6130076054</span>
+		</div>
+		<div class=image data-config='{ "seed": 2321123, "time": -0.2, "variance": 588.1 }'>
+			<img w=256 src="seeds2.jpg">
+			<span class="image-text">"Streams"</span>
+			<span class="image-text seed">2321123</span>
+		</div>
+		<div class=image data-config='{ "seed": 9183923745, "time": -3.9, "variance": 8192, "bw": true }'>
+			<img w=256 src="seeds3.jpg">
+			<span class="image-text">"Lines"</span>
+			<span class="image-text seed">9183923745</span>
+		</div>
+		<div class=image data-config='{ "seed": 6828398570, "time": 0.9, "variance": 27.9, "topology": "resnet" }'>
+			<img w=256 src="seeds10.jpg">
+			<span class="image-text">"Alice's purple rabbit"</span>
+			<span class="image-text seed">6828398570</span>
+		</div>
+		
+		<div class=image data-config='{ "seed": 3742851, "time": -4, "variance": 415.9, "bw": true }'>
+			<img w=256 src="seeds5.jpg">
+			<span class="image-text">"The Storm"</span>
+			<span class="image-text seed">3742851</span>
+		</div>
+		<div class=image data-config='{ "seed": 4397, "time": -0.2, "variance": 1552.1 }'>
+			<img w=256 src="seeds6.jpg">
+			<span class="image-text">"Prism"</span>
+			<span class="image-text seed">3742851</span>
+		</div>
+		<div class=image data-config='{ "seed": 3742849, "time": -0.6, "variance": 181.0 }'>
+			<img w=256 src="seeds4.jpg">
+			<span class="image-text">"Gradient"</span>
+			<span class="image-text seed">3742849</span>
+		</div>
+		<div class=image data-config='{ "seed": 2321175, "time": -1.6, "variance": 8192 }'>
+			<img w=256 src="seeds8.jpg">
+			<span class="image-text">"Excess"</span>
+			<span class="image-text seed">2321175</span>
+		</div>
+
+		<div class=image data-config='{ "seed": 6828398584, "time": -1.3, "variance": 26.0, "bw": true, "topology": "perceptron" }'>
+			<img w=256 src="seeds11.jpg">
+			<span class="image-text">"Stained"</span>
+			<span class="image-text seed">6828398584</span>
+		</div>
+		
+		
+	</div>
+	<figcaption>Figure 2: example seeds. Click on an image to process it in the generator. </figcaption>
+</figure>
+
+<p>And these are just some examples. Try changing the seed, the time or the variance yourself and maybe, just maybe, you come across some masterpiece! 😛</p>
+
+<h3>Exploring other architectures</h3>
+
+<p>In this section, I want to show you some results I've been getting with some more exotic architectures. </p>
+
+<figure class=collapsed>
+	<div class="images" style="--columns: 2">
+		<div class="image">
+			<img w=800 src="img.20180606-163539.var412.seed4247240.jpg">
+			<span class=image-text>"The Swirl"</span>
+		</div>
+		<div class="image">
+			<img w=800 src="img.20180606-163659.var412.seed4247241.jpg">
+			<span class=image-text>"Nebula"</span>
+		</div>
+	</div>
+	<figcaption><p>Parameterising images on $ \beta = \cos(10r) $</p></figcaption>
+</figure>
+
+<p>As you can see, these images behave surprisingly very differently. A single parameter more makes a huge difference in the activations of the networks. </p>
+
+<figure class=collapsed>
+	<div class="images" style="--columns: 2">
+		<div class="image">
+			<img w=500 src="img.20180607-013104.var200.seed276794.jpg">
+			<span class=image-text>"Reactor"</span>
+		</div>
+		<div class="image">
+			<img w=500 src="img.20180607-013400.var200.seed27642323.jpg">
+			<span class=image-text>"Warp"</span>
+		</div>
+	</div>
+	
+	<figcaption><p>Symmetry using $f(x^2, y^2, \alpha)$</p></figcaption>
+</figure>
+
+<h3>Wrapping up</h3>
+<p>Now that we have gone through several architectures, explored multiple configurations and looked at a bunch of images, it's time to wrap up. But I want to wrap up by pointing to some possible improvements. </p>
+<ul>
+	<li><p>Train these networks using backpropagation. </p></li>
+	<li><p>As a follow up to training: one way to supercharge this method of creating art would be to incorporate human feedback e.g. using adversarial networks. For instance, humans could be shown two images which they have to choose the one they prefer from. Then, an adversarial network could learn the probability that a given image is chosen by a human, and use the gradient of this adversarial network for backpropagation on the generator network. </p></li>
+	<li><p>Also, there are a lot of things I didn't try. Therefore, one could explore even more of the architecture and parameter space. Changing bias initialisation, kernel initialisation or using different network topologies.</p></li>
+</ul>
+
+<p>In terms of use case: these images make great color and gradient inspiration! Also, I just recently replaced my Spotify playlist covers with these. They make pretty great album artworks (don't they?). <i>(Flume, hit me up ;-) )</i> </p>
+<p>Anyway, that's it for now. I hope you have enjoyed my first blog post. If you did, I'd appreciate if you consider subscribing to my blog (via <a target="_blank" href="/blog.rss">RSS</a> or <a target="_blank" href="/blog.json">JSON-Feed</a>). I'll try to publish blog posts regulary here. See you then! </p>
+
+
+<div class="post__acknowledgments full-width grid">
+	<h4>Acknolowdgements</h4>
+	<p>I want to thank David Ha (<a href="https://twitter.com/hardmaru" target="_blank">@hardmaru</a>) for his work on his blog series on CPPNs<sup><a href="#ha2016">[1]</a></sup> and his open source publications which were a great resource to me during development of this blog post. Also, Dennis Kerzig's implementation of CPPNs<sup><a href="#kerzig2018">[2]</a></sup> served me as a great base for generating these pictures in Python.</p>
+	<h4>Code</h4>
+	<p>I published the code used to generate the images in this post on GitHub. As mentioned it's based on <a href="#kerzig2018">[2]</a> and runs in Python with Tensorflow. </p>
+	<h4>References</h4>
+	<ol class=references>
+		<li id=ha2016>
+			<span class=title>Generating Abstract Patterns with TensorFlow</span>
+			<a href="http://blog.otoro.net/2016/03/25/generating-abstract-patterns-with-tensorflow/" target="_blank">[link]</a>
+			<br>
+			David Ha
+		</li>
+		<li id=kerzig2018>
+			<span class=title>CPPN in Keras 2</span>
+			<a href="https://github.com/wottpal/cppn-keras" target="_blank">[link]</a>
+			<br>
+			Dennis Kerzig
+		</li>
+	</ol>
+</div>

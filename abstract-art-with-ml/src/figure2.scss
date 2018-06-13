@@ -1,0 +1,11 @@
+@import '../../../../src/css/functions';
+
+.seed-figure-grid > .image {
+	cursor: pointer;
+}
+
+.seed-figure-grid.images > .image .image-text.seed {
+	font-family: LabGrotesqueMono, monospace;
+	left: initial; right: 0;
+}
+

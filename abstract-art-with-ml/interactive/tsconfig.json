@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "outDir": "./built/",
+        "sourceMap": true,
+        "strict": false,
+        "module": "es2015",
+        "moduleResolution": "node",
+        "target": "es5",
+        "pretty": true,
+        "lib": ["es6", "es2017", "es2015", "dom"],
+        "experimentalDecorators": true
+    },
+    "include": [
+        "./src/**/*"
+    ]
+}
