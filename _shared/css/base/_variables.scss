@@ -1,0 +1,22 @@
+// colors
+$color--dark:			#000;
+$color--grey: 			#B5B5B5;
+
+$color--accent:         #148E8E;
+
+// layout
+$wrap-width: 	900px;
+$wrap-padding:  25px;
+$wrap-mobile-page-padding: 25px;
+
+// media queries
+// 
+$breakpoint-mobile: 	767px;
+$breakpoint-small:		480px;
+
+$breakpoints: (
+	'grid-medium': (max-width: 1284px),
+	'grid-small': (max-width: 1030px),
+	'mobile': (max-width: $breakpoint-mobile),
+	'desktop': (min-width: $breakpoint-mobile + 1px)
+);

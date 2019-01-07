@@ -72,7 +72,7 @@ import * as tf from '@tensorflow/tfjs'
 import $ from 'jquery'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
-import runOnScreen from '../../../../../shared/run-on-screen'
+import runOnScreen from '../helper/runonscreen'
 
 import { createModel } from '../model'
 import { render, RenderedImage } from "../render"
@@ -124,8 +124,8 @@ export default class Figure1 extends Vue {
 			}
 		}, 83)
 
-		$('.seed-figure-grid > .image').on('click', (e) => {
-			let d = $(e.delegateTarget).attr('data-config')
+		$('.seed-figure figure').on('click', (e) => {
+			let d = $(e.delegateTarget).find('input.art-props').val()
 			let data = JSON.parse(d)
 			
 			this.seed = "" + data.seed
