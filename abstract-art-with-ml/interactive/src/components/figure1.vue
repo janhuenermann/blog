@@ -116,7 +116,7 @@ export default class Figure1 extends Vue {
 	device: string = tf.getBackend() == 'webgl' ? 'gpu' : 'cpu'
 
 	mounted () {
-		runOnScreen(this.$el, () => {
+		runOnScreen(this.$el as HTMLElement, () => {
 			if (this.currentRender) {
 				if (this.currentRender.next().done) {
 					this.currentRender = null

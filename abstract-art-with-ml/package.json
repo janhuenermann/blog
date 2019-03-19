@@ -1,26 +1,36 @@
 {
   "name": "@janhuenermann/abstract-art-with-ml",
-  "version": "0.1.0",
-  "description": "",
+  "version": "0.0.1",
+  "private": true,
+  "description": "A project to explore art with neural networks",
   "main": "index.js",
   "scripts": {
+    "build": "cd interactive/; mkdir -p build; webpack --progress --colors",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Jan Hünermann (http://janhuenermann.com/)",
-  "license": "ISC",
+  "keywords": [],
+  "author": {
+    "name": "Jan Hünermann",
+    "url": "https://github.com/janhuenermann"
+  },
+  "license": "Apache-2.0",
   "dependencies": {
-    "@tensorflow/tfjs": "^0.10.3",
-    "assert": "^1.4.1",
-    "node-sass": "^4.9.0",
-    "typescript": "^2.8.3",
-    "vue": "^2.5.16",
-    "vue-class-component": "^6.2.0",
-    "vueify": "^9.4.1"
+    "vue": "^2.5.2",
+    "vue-class-component": "^6.0.0",
+    "vue-property-decorator": "^6.0.0",
+    "vue-router": "^3.0.1",
+    "@tensorflow/tfjs": "0.10.3"
   },
   "devDependencies": {
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-es2015": "^6.24.1",
-    "sass-loader": "^7.0.1",
-    "webpack": "^4.10.2"
+    "compression-webpack-plugin": "^2.0.0",
+    "css-loader": "^0.28.1",
+    "jquery": "^3.3.1",
+    "node-sass": "^4.10.0",
+    "sass-loader": "^7.1.0",
+    "ts-loader": "^2.0.3",
+    "typescript": "^2.7.2",
+    "vue-loader": "^12.0.3",
+    "vue-template-compiler": "^2.5.2",
+    "webpack": "^2.5.0"
   }
 }
