@@ -109,13 +109,12 @@ def save_image(image, results_dir, postfix = ""):
     if not os.path.exists(results_dir): os.makedirs(results_dir)
 
     timestr = time.strftime("%Y%m%d-%H%M%S")
-    image_name = f"img.{timestr}{postfix}.png"
+    image_name = "img.{}{}.png".format(timestr, postfix)
     image_path = os.path.join(results_dir, image_name)
     file = Image.fromarray(image)
-    file.save(image_path)    
-    
+    file.save(image_path)
     return image_path
-    
+
 
 
 if __name__ == "__main__":
@@ -124,12 +123,12 @@ if __name__ == "__main__":
     parser.add_argument('-p', '--plot', action='store_const', const=True)
     parser.add_argument('--n', type=int, nargs='?', default=1)
     parser.add_argument('--path', type=str, nargs='?', default="./results")
-    parser.add_argument('--x', type=int, nargs='?', default=500)
-    parser.add_argument('--y', type=int, nargs='?', default=500)
+    parser.add_argument('--x', type=int, nargs='?', default=1600)
+    parser.add_argument('--y', type=int, nargs='?', default=1600)
     parser.add_argument('--bw', action='store_const', const=True)
     parser.add_argument('--variance', type=float, nargs='?')
     parser.add_argument('--seed', type=int, default=100)
-    parser.add_argument('--series', type=int, default=1)
+    parser.add_argument('--series', type=int, default=2)
     args = parser.parse_args()
 
     params = create_grid((args.x, args.y), 1.0)
@@ -137,24 +136,24 @@ if __name__ == "__main__":
     images = []
 
     for i in tqdm(range(args.n)):
-        tf.set_random_seed(args.seed + i)
+        tf.random.set_seed(args.seed + i)
         np.random.seed(args.seed + i)
 
         variance = args.variance or np.random.uniform(50, 150)
         lat = np.random.normal(0,1,1)
         model = build_model(len(params), variance, bw = args.bw)
 
-
-        for j in tqdm(range(args.series)):
+        for j in tqdm(range(args.series), leave=False):
             params = create_grid((args.x, args.y), lat + 2 * j / args.series, 1.0)
-
             image = create_image(model, params, (args.x, args.y))
             image = image.squeeze()
             images.append(image)
 
-            if args.save: 
-                image_path = save_image(image, args.path, f'.var{variance:.0f}.seed{args.seed+i}')
-                tqdm.write(f"Image saved under {image_path}")
+            if args.save:
+                image_path = save_image(image, args.path, '.var{:.0f}.seed{:}'.format(variance,
+                    args.seed + i))
+                tqdm.write("Image saved under {}".format(image_path))
 
-    if args.plot: plot_images(images)
+    if args.plot:
+        plot_images(images)
 
